@@ -80,12 +80,25 @@ struct ContentView: View {
                         Text(month.1).tag(month.0)
                     }
                 }
+                .padding(.leading, 10)
                 Picker("Year",selection: $selectedYear) {
                     ForEach(years, id: \.self) { year in
-                        Text("\(year)").tag(year)
+                        Text("\(String(year))").tag(year)
                     }
                 }.pickerStyle(.menu)
+                
+                Spacer()
+                
+                Button("Add Budget", systemImage: "plus") {
+                    showBudgetTypeSheet = true
+                }
+                // add padding on right side of button
+                .padding(.trailing, 10)
+                //increase the size of the button
+                .frame(width: 150, height: 50)
             }
+            //add padding on bottom by 5
+            .padding(.bottom, 5)
             
             if !filteredBudgetTotals.isEmpty {
                 BudgetListView(bt: filteredBudgetTotals, selectedBudgetId: $selectedBudgetId)
@@ -95,14 +108,6 @@ struct ContentView: View {
                 Spacer()
             }
         }
-        
-        
-        Button("Add Budget Line", systemImage: "plus") {
-            showBudgetTypeSheet = true
-        }
-        .frame(minHeight: 10, maxHeight: 20)
-        .padding(.bottom, -5)
-        .padding(.top, 5)
         .sheet(isPresented: $showBudgetTypeSheet) {
             CreateBudgetView(showBudgetTypeSheet: $showBudgetTypeSheet, selectedYear: selectedYear, selectedMonth: selectedMonth)
         }
@@ -159,7 +164,7 @@ struct BudgetListView: View {
                     
                 }
                 .padding(.vertical, 8)  // Optional padding to space out the rows
-                .swipeActions {
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button(role: .destructive) {
                         selectedBudgetId = budgetTotal.id
                         deleteBudgetTotal(budgetTotalId: selectedBudgetId)
