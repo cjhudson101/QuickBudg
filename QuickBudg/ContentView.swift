@@ -100,7 +100,9 @@ struct ContentView: View {
         Button("Add Budget Line", systemImage: "plus") {
             showBudgetTypeSheet = true
         }
-        .padding()
+        .frame(minHeight: 10, maxHeight: 20)
+        .padding(.bottom, -5)
+        .padding(.top, 5)
         .sheet(isPresented: $showBudgetTypeSheet) {
             CreateBudgetView(showBudgetTypeSheet: $showBudgetTypeSheet, selectedYear: selectedYear, selectedMonth: selectedMonth)
         }
@@ -118,6 +120,18 @@ struct BudgetListView: View {
             ForEach(bt, id: \.id) { budgetTotal in
                 let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
                 HStack {
+                    
+                    Gauge(value: Double(percentage), in: 0...100) {
+                                } currentValueLabel: {
+                                    Text("\(percentage)%")
+                                        .foregroundColor(colorForPercentage(percentage))
+                                }
+                                .tint(colorForPercentage(percentage))
+                                .gaugeStyle(.accessoryCircular)
+                    
+                    Spacer()
+                        .frame(width: 20)
+                    
                     VStack(alignment: .leading) {
                         Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
                             .font(.headline)        // Set the title font
@@ -126,18 +140,10 @@ struct BudgetListView: View {
                             .foregroundColor(.gray) // Set subtitle color
                     }// Left-justified text
                     
-                    Spacer()              // Pushes buttons to the right
-                    
-                    Text("\(percentage)%")
-                        .font(.title)
-                        .foregroundColor(colorForPercentage(percentage))
-
                     Spacer()
 
                     Button (action: {
                         selectedBudgetId = budgetTotal.id
-                        print(budgetTotal.id)
-                        print(selectedBudgetId)
                         showAddExpenseSheet = true
                     }) {
                             Image(systemName: "plus")
@@ -146,9 +152,10 @@ struct BudgetListView: View {
                                 .foregroundColor(.white)
                                 .clipShape(Circle())
                         }
-                        .sheet(isPresented: $showAddExpenseSheet) {
+                    .sheet(isPresented: $showAddExpenseSheet) {
                         CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: $selectedBudgetId)
-                        }
+                    }
+                    .contentShape(Rectangle())
                     
                 }
                 .padding(.vertical, 8)  // Optional padding to space out the rows
@@ -160,9 +167,9 @@ struct BudgetListView: View {
                         Label("Delete", systemImage: "trash")
                     }
                 }
-                
             }
         }
+        
     }
     
     func deleteBudgetTotal(budgetTotalId: String) {
@@ -190,10 +197,14 @@ struct BudgetListView: View {
         let opacity: Double = 0.9  // Adjust the opacity level (0.0 to 1.0)
         
         switch value {
-        case 0...50:
+        case 0:
+            return Color.gray.opacity(opacity)
+        case 1...25:
             return Color.green.opacity(opacity)
-        case 51...75:
+        case 26...50:
             return Color.yellow.opacity(opacity)
+        case 51...75:
+            return Color.orange.opacity(opacity)
         default:
             return Color.red.opacity(opacity)
         }

@@ -36,7 +36,7 @@ struct CreateExpenseView: View {
             
             HStack {
                 Spacer()
-                Button("Add") {
+                Button("Save") {
                     addExpense(id: budgetTotalId)
                     newExpenseAmount = nil
                     newExpenseDescription = ""

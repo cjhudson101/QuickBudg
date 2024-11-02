@@ -59,7 +59,7 @@ var body: some View {
             
             HStack {
                 Spacer()
-                Button("Add") {
+                Button("Save") {
                     addBudgetType()
                     newBudgetTypeName = "";
                     showBudgetTypeSheet = false
