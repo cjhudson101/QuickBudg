@@ -13,7 +13,7 @@ struct CreateExpenseView: View {
     var realm: Realm!
     
     @Binding var showSheet: Bool
-    @State var budgetTotalId: String = ""
+    @Binding var budgetTotalId: String
     
     @State private var newExpenseDescription: String = ""
     @State private var newExpenseAmount: Double?

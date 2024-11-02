@@ -29,6 +29,7 @@ struct ContentView: View {
     @State private var selectedYear: Int
     @State private var selectedMonth: Int
     @State private var showBudgetTypeSheet = false
+    @State private var selectedBudgetId: String = ""
 
     @ObservedResults(BudgetTotal.self) var budgetTotals
 
@@ -87,7 +88,7 @@ struct ContentView: View {
             }
             
             if !filteredBudgetTotals.isEmpty {
-                BudgetListView(bt: filteredBudgetTotals)
+                BudgetListView(bt: filteredBudgetTotals, selectedBudgetId: $selectedBudgetId)
             } else {
                 Text("No budgets found!  Add a budget using the button below!")
             }
@@ -108,7 +109,7 @@ struct ContentView: View {
 struct BudgetListView: View {
     var bt: Results<BudgetTotal>
     @State var showAddExpenseSheet: Bool = false;
-    @State private var selectedBudgetId: String = ""
+    @Binding var selectedBudgetId: String
     
     var body: some View {
         List {
@@ -146,7 +147,7 @@ struct BudgetListView: View {
                                 .clipShape(Circle())
                         }
                         .sheet(isPresented: $showAddExpenseSheet) {
-                        CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: selectedBudgetId)
+                        CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: $selectedBudgetId)
                         }
                     
                 }
