@@ -87,7 +87,7 @@ struct ContentView: View {
             }
             
             if !filteredBudgetTotals.isEmpty {
-                BudgetListView(budgetTotals: filteredBudgetTotals, showAddExpenseSheet: false)
+                BudgetListView(bt: filteredBudgetTotals)
             } else {
                 Text("No budgets found!  Add a budget using the button below!")
             }
@@ -106,13 +106,13 @@ struct ContentView: View {
 }
 
 struct BudgetListView: View {
-    var budgetTotals: Results<BudgetTotal>
+    var bt: Results<BudgetTotal>
     @State var showAddExpenseSheet: Bool = false;
     @State private var selectedBudgetId: String = ""
     
     var body: some View {
         List {
-            ForEach(budgetTotals, id: \.id) { budgetTotal in
+            ForEach(bt, id: \.id) { budgetTotal in
                 let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
                 HStack {
                     VStack(alignment: .leading) {
@@ -151,13 +151,15 @@ struct BudgetListView: View {
                     
                 }
                 .padding(.vertical, 8)  // Optional padding to space out the rows
-                .swipeActions(edge: HorizontalEdge, allowsFullSwipe: false) {
+                .swipeActions {
                     Button(role: .destructive) {
-                        deleteBudgetTotal(budgetTotal.id)
+                        selectedBudgetId = budgetTotal.id
+                        deleteBudgetTotal(budgetTotalId: selectedBudgetId)
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }
                 }
+                
             }
         }
     }
@@ -179,6 +181,8 @@ struct BudgetListView: View {
             print("Error deleting item from Realm: \(error)")
         }
         print("Budget deleted!")
+        realm.refresh()
+        print("Realm refreshed!")
     }
     
     func colorForPercentage(_ value: Int) -> Color {

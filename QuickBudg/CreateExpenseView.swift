@@ -37,7 +37,7 @@ struct CreateExpenseView: View {
             HStack {
                 Spacer()
                 Button("Add") {
-                    addExpense()
+                    addExpense(id: budgetTotalId)
                     newExpenseAmount = nil
                     newExpenseDescription = ""
                     showSheet = false;
@@ -55,14 +55,14 @@ struct CreateExpenseView: View {
         }
     }
 
-    func addExpense() {
+    func addExpense(id: String) {
         guard let realm = try? Realm() else {
             print("Error initializing Realm instance")
             return
         }
-        print("Adding expense for budget total id \(budgetTotalId)")
+        print("Adding expense for budget total id \(id)")
         var existingBudgetTotal: BudgetTotal
-        if let budgetFromRealm: BudgetTotal = realm.object(ofType: BudgetTotal.self, forPrimaryKey: budgetTotalId) {
+        if let budgetFromRealm: BudgetTotal = realm.object(ofType: BudgetTotal.self, forPrimaryKey: id) {
             existingBudgetTotal = budgetFromRealm
             print("Found realm budget: \(existingBudgetTotal)")
             let newExpense: Expense = Expense();
