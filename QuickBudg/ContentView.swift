@@ -90,7 +90,9 @@ struct ContentView: View {
             if !filteredBudgetTotals.isEmpty {
                 BudgetListView(bt: filteredBudgetTotals, selectedBudgetId: $selectedBudgetId)
             } else {
+                Spacer()
                 Text("No budgets found!  Add a budget using the button below!")
+                Spacer()
             }
         }
         
@@ -119,7 +121,6 @@ struct BudgetListView: View {
                     VStack(alignment: .leading) {
                         Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
                             .font(.headline)        // Set the title font
-                            .foregroundColor(.black) // Set title color
                         Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
                             .font(.subheadline)     // Set the subtitle font
                             .foregroundColor(.gray) // Set subtitle color
@@ -133,7 +134,6 @@ struct BudgetListView: View {
 
                     Spacer()
 
-                    Text("\(budgetTotal.id)")
                     Button (action: {
                         selectedBudgetId = budgetTotal.id
                         print(budgetTotal.id)

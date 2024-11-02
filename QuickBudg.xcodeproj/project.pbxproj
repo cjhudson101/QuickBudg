@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		832509E02CD5E4D20063AFE3 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 8330459F2CC8B5E6001BD14F /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		833045A02CC8B5E6001BD14F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8330459F2CC8B5E6001BD14F /* RealmSwift */; };
 		833045A62CC8C183001BD14F /* BudgetModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833045A22CC8B79C001BD14F /* BudgetModels.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		832509E12CD5E4D20063AFE3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				832509E02CD5E4D20063AFE3 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		833045A22CC8B79C001BD14F /* BudgetModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetModels.swift; sourceTree = "<group>"; };
@@ -36,6 +51,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		832509E22CD5E4EE0063AFE3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		833045A12CC8B723001BD14F /* RealmModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -49,6 +71,7 @@
 			children = (
 				833045A12CC8B723001BD14F /* RealmModels */,
 				83E608322CC7131600F84E96 /* QuickBudg */,
+				832509E22CD5E4EE0063AFE3 /* Frameworks */,
 				83E608312CC7131600F84E96 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +94,7 @@
 				83E6082C2CC7131600F84E96 /* Sources */,
 				83E6082D2CC7131600F84E96 /* Frameworks */,
 				83E6082E2CC7131600F84E96 /* Resources */,
+				832509E12CD5E4D20063AFE3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -282,6 +306,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuickBudg/Preview Content\"";
+				DEVELOPMENT_TEAM = 986GF6RWX9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -314,6 +339,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuickBudg/Preview Content\"";
+				DEVELOPMENT_TEAM = 986GF6RWX9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
