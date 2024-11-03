@@ -121,60 +121,78 @@ struct BudgetListView: View {
     @Binding var selectedBudgetId: String
     
     var body: some View {
-        List {
-            ForEach(bt, id: \.id) { budgetTotal in
-                let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
-                HStack {
-                    
-                    Gauge(value: Double(percentage), in: 0...100) {
-                                } currentValueLabel: {
-                                    Text("\(percentage)%")
-                                        .foregroundColor(colorForPercentage(percentage))
-                                }
-                                .tint(colorForPercentage(percentage))
-                                .gaugeStyle(.accessoryCircular)
-                    
-                    Spacer()
-                        .frame(width: 20)
-                    
-                    VStack(alignment: .leading) {
-                        Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
-                            .font(.headline)        // Set the title font
-                        Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
-                            .font(.subheadline)     // Set the subtitle font
-                            .foregroundColor(.gray) // Set subtitle color
-                    }// Left-justified text
-                    
-                    Spacer()
-
-                    Button (action: {
-                        selectedBudgetId = budgetTotal.id
-                        showAddExpenseSheet = true
-                    }) {
+        ZStack {
+            
+            List {
+                ForEach(bt, id: \.id) { budgetTotal in
+                    let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
+                    HStack {
+                        
+                        Gauge(value: Double(percentage), in: 0...100) {
+                        } currentValueLabel: {
+                            Text("\(percentage)%")
+                                .foregroundColor(colorForPercentage(percentage))
+                        }
+                        .tint(colorForPercentage(percentage))
+                        .gaugeStyle(.accessoryCircular)
+                        
+                        Spacer()
+                            .frame(width: 20)
+                        
+                        VStack(alignment: .leading) {
+                            Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
+                                .font(.headline)        // Set the title font
+                            Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
+                                .font(.subheadline)     // Set the subtitle font
+                                .foregroundColor(.gray) // Set subtitle color
+                        }// Left-justified text
+                        
+                        Spacer()
+                        
+                        Button (action: {
+                            selectedBudgetId = budgetTotal.id
+                            showAddExpenseSheet.toggle()
+                        }) {
                             Image(systemName: "plus")
-                                .frame(width: 30, height: 30)
+                                .frame(width: 40, height: 40)
                                 .background(Color.green)
                                 .foregroundColor(.white)
                                 .clipShape(Circle())
                         }
-                    .sheet(isPresented: $showAddExpenseSheet) {
-                        CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: $selectedBudgetId)
+                        .contentShape(Rectangle())
                     }
-                    .contentShape(Rectangle())
-                    
-                }
-                .padding(.vertical, 8)  // Optional padding to space out the rows
-                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    Button(role: .destructive) {
-                        selectedBudgetId = budgetTotal.id
-                        deleteBudgetTotal(budgetTotalId: selectedBudgetId)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
+                    .padding(.vertical, 8)  // Optional padding to space out the rows
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            selectedBudgetId = budgetTotal.id
+                            deleteBudgetTotal(budgetTotalId: selectedBudgetId)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
+//                    .buttonStyle(PlainButtonStyle())
                 }
             }
+            .blur(radius: showAddExpenseSheet ? 5 : 0)
+            
+            if (showAddExpenseSheet) {
+                Color.black.opacity(0.3) // Darken and blur the background
+                    .edgesIgnoringSafeArea(.all)
+                    .blur(radius: 5)
+                
+                GroupBox {
+                    CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: $selectedBudgetId)
+                } label: {
+                    Text("Enter description and amount.")
+                        .font(.headline)
+                        .padding()
+                }
+                .padding(.horizontal, 25)
+                //veritcally align the groupbox to the top
+                .padding(.top, 10)
+                .offset(y: -100)
+            }
         }
-        
     }
     
     func deleteBudgetTotal(budgetTotalId: String) {

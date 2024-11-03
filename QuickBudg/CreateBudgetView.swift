@@ -61,13 +61,12 @@ var body: some View {
                 Spacer()
                 Button("Save") {
                     addBudgetType()
-                    newBudgetTypeName = "";
-                    showBudgetTypeSheet = false
+                    showBudgetTypeSheet.toggle()
                 }.disabled(newBudgetAmount == nil || (selectedBudgetType == nil && newBudgetTypeName.isEmpty))
                 Spacer()
                 Button("Cancel") {
                     newBudgetTypeName = "";
-                    showBudgetTypeSheet = false
+                    showBudgetTypeSheet.toggle()
                 }
                 Spacer()
             }

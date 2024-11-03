@@ -20,14 +20,22 @@ struct CreateExpenseView: View {
     
     
     var body: some View {
-        VStack {
-            Text("Enter description and amount.")
-                .font(.headline)
-                .padding()
-            
+        VStack(alignment: .leading) {
+            Label {
+                Text("Enter expense description")
+            } icon: {
+                Image(systemName: "text.alignleft")
+            }
+
             TextField("Enter description", text: $newExpenseDescription)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
+            
+            Label {
+                Text("Enter expense amount")
+            } icon: {
+                Image(systemName: "dollarsign.circle")
+            }
             
             TextField("Enter amount", value: $newExpenseAmount, formatter: NumberFormatter())
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -40,15 +48,15 @@ struct CreateExpenseView: View {
                     addExpense(id: budgetTotalId)
                     newExpenseAmount = nil
                     newExpenseDescription = ""
-                    showSheet = false;
-                }
+                    showSheet.toggle();
+                }.buttonStyle(.borderedProminent)
                 .disabled(newExpenseAmount == nil)
                 Spacer()
                 Button("Cancel") {
                     newExpenseAmount = nil
                     newExpenseDescription = ""
-                    showSheet = false;
-                }
+                    showSheet.toggle();
+                }.buttonStyle(.bordered)
                 Spacer()
             }
             .padding()
