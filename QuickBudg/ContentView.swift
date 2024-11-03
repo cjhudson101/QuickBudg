@@ -183,9 +183,10 @@ struct BudgetListView: View {
                 GroupBox {
                     CreateExpenseView(showSheet: $showAddExpenseSheet, budgetTotalId: $selectedBudgetId)
                 } label: {
-                    Text("Enter description and amount.")
-                        .font(.headline)
+                    Text("Add Expense")
+                        .font(.title)
                         .padding()
+                        
                 }
                 .padding(.horizontal, 25)
                 //veritcally align the groupbox to the top

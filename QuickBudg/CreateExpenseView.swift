@@ -29,17 +29,16 @@ struct CreateExpenseView: View {
 
             TextField("Enter description", text: $newExpenseDescription)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+
             
             Label {
                 Text("Enter expense amount")
             } icon: {
                 Image(systemName: "dollarsign.circle")
-            }
+            }.padding(.top, 10)
             
             TextField("Enter amount", value: $newExpenseAmount, formatter: NumberFormatter())
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
                 .keyboardType(.numberPad) // Allows for decimal input
             
             HStack {
