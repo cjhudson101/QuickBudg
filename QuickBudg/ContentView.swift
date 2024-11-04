@@ -120,7 +120,7 @@ struct BudgetListView: View {
     @State var showAddExpenseSheet: Bool = false;
     @State var showDetailsSheet: Bool = false;
     @Binding var selectedBudgetId: String
-    @State var selectedBudgetTotal: BudgetTotal = BudgetTotal()
+    @State var selectedBudgetTotal: BudgetTotal? = nil
     
     var body: some View {
         ZStack {
@@ -253,8 +253,8 @@ struct BudgetListView: View {
 }
 
 struct ExpenseListView: View {
-    @State var budgetTotal: BudgetTotal
-    @State var showDetailsSheet: Bool
+    var budgetTotal: BudgetTotal
+    @Binding var showDetailsSheet: Bool
     
     var body: some View {
         
