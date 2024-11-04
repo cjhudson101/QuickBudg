@@ -10,15 +10,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>25</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>160</string>
+					<string>170</string>
 					<key>StartingColumnNumber</key>
 					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>160</string>
+					<string>169</string>
 					<key>Timestamp</key>
-					<string>752366846.912374</string>
+					<string>752390396.897266</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,14 +34,15 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>                        }</string>
+				<string>                        }
+</string>
 				<key>leading</key>
 				<string>                                .foregroundColor(.white)
                                 .clipShape(Circle())
 </string>
 				<key>trailing</key>
-				<string>
-                        .contentShape(Rectangle())
+				<string>                        .contentShape(Rectangle())
+                        .buttonStyle(.borderless)
                     }
 </string>
 			</dict>
@@ -54,15 +55,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>25</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>160</string>
+					<string>170</string>
 					<key>StartingColumnNumber</key>
 					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>160</string>
+					<string>169</string>
 					<key>Timestamp</key>
-					<string>752366846.912426</string>
+					<string>752390396.897277</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -78,14 +79,15 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>                        }</string>
+				<string>                        }
+</string>
 				<key>leading</key>
 				<string>                                .foregroundColor(.white)
                                 .clipShape(Circle())
 </string>
 				<key>trailing</key>
-				<string>
-                        .contentShape(Rectangle())
+				<string>                        .contentShape(Rectangle())
+                        .buttonStyle(.borderless)
                     }
 </string>
 			</dict>

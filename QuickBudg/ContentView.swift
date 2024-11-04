@@ -118,7 +118,9 @@ struct ContentView: View {
 struct BudgetListView: View {
     var bt: Results<BudgetTotal>
     @State var showAddExpenseSheet: Bool = false;
+    @State var showDetailsSheet: Bool = false;
     @Binding var selectedBudgetId: String
+    @State var selectedBudgetTotal: BudgetTotal = BudgetTotal()
     
     var body: some View {
         ZStack {
@@ -126,26 +128,33 @@ struct BudgetListView: View {
             List {
                 ForEach(bt, id: \.id) { budgetTotal in
                     let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
+                    
                     HStack {
-                        
-                        Gauge(value: Double(percentage), in: 0...100) {
-                        } currentValueLabel: {
-                            Text("\(percentage)%")
-                                .foregroundColor(colorForPercentage(percentage))
-                        }
-                        .tint(colorForPercentage(percentage))
-                        .gaugeStyle(.accessoryCircular)
-                        
-                        Spacer()
-                            .frame(width: 20)
-                        
-                        VStack(alignment: .leading) {
-                            Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
-                                .font(.headline)        // Set the title font
-                            Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
-                                .font(.subheadline)     // Set the subtitle font
-                                .foregroundColor(.gray) // Set subtitle color
-                        }// Left-justified text
+                        Button(action: {
+                            selectedBudgetTotal = budgetTotal
+                            showDetailsSheet.toggle()
+                        }) {
+                            HStack{
+                                Gauge(value: Double(percentage), in: 0...100) {
+                                } currentValueLabel: {
+                                    Text("\(percentage)%")
+                                        .foregroundColor(colorForPercentage(percentage))
+                                }
+                                .tint(colorForPercentage(percentage))
+                                .gaugeStyle(.accessoryCircular)
+                                
+                                Spacer()
+                                    .frame(width: 20)
+                                
+                                VStack(alignment: .leading) {
+                                    Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
+                                        .font(.headline)        // Set the title font
+                                    Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
+                                        .font(.subheadline)     // Set the subtitle font
+                                        .foregroundColor(.gray) // Set subtitle color
+                                }
+                            }
+                        }.buttonStyle(.borderless)
                         
                         Spacer()
                         
@@ -160,6 +169,7 @@ struct BudgetListView: View {
                                 .clipShape(Circle())
                         }
                         .contentShape(Rectangle())
+                        .buttonStyle(.borderless)
                     }
                     .padding(.vertical, 8)  // Optional padding to space out the rows
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -192,6 +202,13 @@ struct BudgetListView: View {
                 //veritcally align the groupbox to the top
                 .padding(.top, 10)
                 .offset(y: -100)
+            }
+            
+            if (showDetailsSheet) {
+                Color.black.opacity(0.3) // Darken and blur the background
+                    .edgesIgnoringSafeArea(.all)
+                    .blur(radius: 5)
+                ExpenseListView(butgetTotal: selectedBudgetTotal)
             }
         }
     }
@@ -232,6 +249,44 @@ struct BudgetListView: View {
         default:
             return Color.red.opacity(opacity)
         }
+    }
+}
+
+struct ExpenseListView: View {
+    @State var budgetTotal: BudgetTotal
+    @State var showDetailsSheet: Bool
+    
+    var body: some View {
+        
+        GroupBox {
+            VStack {
+                List {
+                    ForEach(budgetTotal.expenses, id: \.id) { expense in
+                        HStack {
+                            //show the description of the expense
+                            Text(expense.descriptionText)
+                            Spacer()
+                            //show a formatted date for the expense
+                            Text(expense.dateEntered, style: .date)
+                            //show the amount of the expense
+                            Text("$\(expense.amount)")
+                        }
+                    }
+                }
+                
+                Button(action: {showDetailsSheet.toggle()}) { Text("Close")}
+            }
+        } label: {
+            Text("Budget Details")
+                .font(.title)
+                .padding()
+            
+        }
+        .padding(.horizontal, 25)
+        //veritcally align the groupbox to the top
+        .padding(.top, 10)
+        .offset(y: -100)
+        
     }
 }
 
