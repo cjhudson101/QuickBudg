@@ -127,60 +127,7 @@ struct BudgetListView: View {
             
             List {
                 ForEach(bt, id: \.id) { budgetTotal in
-                    let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount))*100)
-                    
-                    HStack {
-                        Button(action: {
-                            selectedBudgetTotal = budgetTotal
-                            showDetailsSheet.toggle()
-                        }) {
-                            HStack{
-                                Gauge(value: Double(percentage), in: 0...100) {
-                                } currentValueLabel: {
-                                    Text("\(percentage)%")
-                                        .foregroundColor(colorForPercentage(percentage))
-                                }
-                                .tint(colorForPercentage(percentage))
-                                .gaugeStyle(.accessoryCircular)
-                                
-                                Spacer()
-                                    .frame(width: 20)
-                                
-                                VStack(alignment: .leading) {
-                                    Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
-                                        .font(.headline)        // Set the title font
-                                    Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
-                                        .font(.subheadline)     // Set the subtitle font
-                                        .foregroundColor(.gray) // Set subtitle color
-                                }
-                            }
-                        }.buttonStyle(.borderless)
-                        
-                        Spacer()
-                        
-                        Button (action: {
-                            selectedBudgetId = budgetTotal.id
-                            showAddExpenseSheet.toggle()
-                        }) {
-                            Image(systemName: "plus")
-                                .frame(width: 40, height: 40)
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                        }
-                        .contentShape(Rectangle())
-                        .buttonStyle(.borderless)
-                    }
-                    .padding(.vertical, 8)  // Optional padding to space out the rows
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button(role: .destructive) {
-                            selectedBudgetId = budgetTotal.id
-                            deleteBudgetTotal(budgetTotalId: selectedBudgetId)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    }
-//                    .buttonStyle(PlainButtonStyle())
+                    BudgetRowView(budgetTotal: budgetTotal, selectedBudgetId: $selectedBudgetId, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetTotal: $selectedBudgetTotal)
                 }
             }
             .blur(radius: showAddExpenseSheet ? 5 : 0)
@@ -204,11 +151,12 @@ struct BudgetListView: View {
                 .offset(y: -100)
             }
             
-            if (showDetailsSheet) {
-                Color.black.opacity(0.3) // Darken and blur the background
+            if showDetailsSheet, let budgetTotal = selectedBudgetTotal {
+                Color.black.opacity(0.3)
                     .edgesIgnoringSafeArea(.all)
                     .blur(radius: 5)
-                ExpenseListView(butgetTotal: selectedBudgetTotal)
+                
+                ExpenseListView(budgetTotal: budgetTotal, showDetailsSheet: $showDetailsSheet)
             }
         }
     }
@@ -252,6 +200,98 @@ struct BudgetListView: View {
     }
 }
 
+struct BudgetRowView: View {
+    var budgetTotal: BudgetTotal
+    @Binding var selectedBudgetId: String
+    @Binding var showAddExpenseSheet: Bool
+    @Binding var showDetailsSheet: Bool
+    @Binding var selectedBudgetTotal: BudgetTotal?
+
+    var body: some View {
+        let percentage: Int = Int((Double(budgetTotal.totalExpenses) / Double(budgetTotal.totalAmount)) * 100)
+        
+        HStack {
+            Button(action: {
+                selectedBudgetTotal = budgetTotal
+                showDetailsSheet.toggle()
+            }) {
+                HStack {
+                    Gauge(value: Double(percentage), in: 0...100) {
+                    } currentValueLabel: {
+                        Text("\(percentage)%")
+                            .foregroundColor(colorForPercentage(percentage))
+                    }
+                    .tint(colorForPercentage(percentage))
+                    .gaugeStyle(.accessoryCircular)
+                    
+                    Spacer()
+                        .frame(width: 20)
+                    
+                    VStack(alignment: .leading) {
+                        Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
+                            .font(.headline)
+                        Text("$\(budgetTotal.totalExpenses) of  $\(Int(budgetTotal.totalAmount))")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }.buttonStyle(.borderless)
+            
+            Spacer()
+            
+            Button(action: {
+                selectedBudgetId = budgetTotal.id
+                showAddExpenseSheet.toggle()
+            }) {
+                Image(systemName: "plus")
+                    .frame(width: 40, height: 40)
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+            }
+            .contentShape(Rectangle())
+            .buttonStyle(.borderless)
+        }
+        .padding(.vertical, 8)
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button(role: .destructive) {
+                selectedBudgetId = budgetTotal.id
+                deleteBudgetTotal(budgetTotalId: selectedBudgetId)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+    }
+    
+    func deleteBudgetTotal(budgetTotalId: String) {
+        guard let realm = try? Realm(),
+              let budgetTotalToDelete = realm.object(ofType: BudgetTotal.self, forPrimaryKey: budgetTotalId) else { return }
+        
+        do {
+            try realm.write {
+                realm.delete(budgetTotalToDelete.expenses)
+                realm.delete(budgetTotalToDelete)
+            }
+        } catch {
+            print("Error deleting item from Realm: \(error)")
+        }
+        realm.refresh()
+    }
+    
+    func colorForPercentage(_ value: Int) -> Color {
+        let opacity: Double = 0.9
+        
+        switch value {
+        case 0...50:
+            return Color.green.opacity(opacity)
+        case 51...75:
+            return Color.yellow.opacity(opacity)
+        default:
+            return Color.red.opacity(opacity)
+        }
+    }
+}
+
 struct ExpenseListView: View {
     var budgetTotal: BudgetTotal
     @Binding var showDetailsSheet: Bool
@@ -260,25 +300,33 @@ struct ExpenseListView: View {
         
         GroupBox {
             VStack {
-                List {
-                    ForEach(budgetTotal.expenses, id: \.id) { expense in
-                        HStack {
-                            //show the description of the expense
-                            Text(expense.descriptionText)
-                            Spacer()
-                            //show a formatted date for the expense
-                            Text(expense.dateEntered, style: .date)
-                            //show the amount of the expense
-                            Text("$\(expense.amount)")
+                //if there are expenses in the budget total, show them
+                if budgetTotal.expenses.count > 0 {
+                    List {
+                        ForEach(budgetTotal.expenses, id: \.id) { expense in
+                            HStack {
+                                VStack{
+                                    //show the description of the expense
+                                    Text(expense.descriptionText).font(.headline)
+                                    //show a formatted date for the expense
+                                    Text(formatDate(date: expense.dateEntered)).font(.caption)
+                                }
+                                Spacer()
+                                Text("\(currencyFormatted(expense.amount))")
+                            }
                         }
                     }
+                } else {
+                    //if there are no expenses, show a message
+                    Text("No expenses found for this budget!")
                 }
                 
                 Button(action: {showDetailsSheet.toggle()}) { Text("Close")}
+                    .padding(.top, 10)
             }
         } label: {
-            Text("Budget Details")
-                .font(.title)
+            Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN") expenses")
+                .font(.title2)
                 .padding()
             
         }
@@ -287,6 +335,19 @@ struct ExpenseListView: View {
         .padding(.top, 10)
         .offset(y: -100)
         
+    }
+    
+    func formatDate(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        return formatter.string(from: date)
+    }
+    
+    func currencyFormatted(_ amount: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 0
+        return formatter.string(for: amount) ?? ""
     }
 }
 

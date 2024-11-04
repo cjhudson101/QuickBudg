@@ -10,15 +10,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>0</string>
+					<string>16</string>
 					<key>EndingLineNumber</key>
-					<string>170</string>
+					<string>130</string>
 					<key>StartingColumnNumber</key>
-					<string>0</string>
+					<string>16</string>
 					<key>StartingLineNumber</key>
-					<string>169</string>
+					<string>130</string>
 					<key>Timestamp</key>
-					<string>752390396.897266</string>
+					<string>752391156.1098959</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,16 +34,15 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>                        }
-</string>
+				<string></string>
 				<key>leading</key>
-				<string>                                .foregroundColor(.white)
-                                .clipShape(Circle())
-</string>
+				<string>                ForEach(bt, id: \.id) { budgetTotal in
+                    BudgetRowView(budgetTotal: budgetTotal, selectedBudgetId: $selectedBudgetId, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetTotal: $selectedBudgetTotal)
+                </string>
 				<key>trailing</key>
-				<string>                        .contentShape(Rectangle())
-                        .buttonStyle(.borderless)
-                    }
+				<string>}
+            }
+            .blur(radius: showAddExpenseSheet ? 5 : 0)
 </string>
 			</dict>
 			<key>type</key>
@@ -55,15 +54,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>0</string>
+					<string>16</string>
 					<key>EndingLineNumber</key>
-					<string>170</string>
+					<string>130</string>
 					<key>StartingColumnNumber</key>
-					<string>0</string>
+					<string>16</string>
 					<key>StartingLineNumber</key>
-					<string>169</string>
+					<string>130</string>
 					<key>Timestamp</key>
-					<string>752390396.897277</string>
+					<string>752391156.10988</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -79,16 +78,15 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>                        }
-</string>
+				<string></string>
 				<key>leading</key>
-				<string>                                .foregroundColor(.white)
-                                .clipShape(Circle())
-</string>
+				<string>                ForEach(bt, id: \.id) { budgetTotal in
+                    BudgetRowView(budgetTotal: budgetTotal, selectedBudgetId: $selectedBudgetId, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetTotal: $selectedBudgetTotal)
+                </string>
 				<key>trailing</key>
-				<string>                        .contentShape(Rectangle())
-                        .buttonStyle(.borderless)
-                    }
+				<string>}
+            }
+            .blur(radius: showAddExpenseSheet ? 5 : 0)
 </string>
 			</dict>
 			<key>type</key>
