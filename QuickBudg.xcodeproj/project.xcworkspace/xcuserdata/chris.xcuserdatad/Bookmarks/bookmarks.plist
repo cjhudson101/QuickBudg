@@ -10,15 +10,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>16</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>130</string>
+					<string>356</string>
 					<key>StartingColumnNumber</key>
-					<string>16</string>
+					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>130</string>
+					<string>356</string>
 					<key>Timestamp</key>
-					<string>752391156.1098959</string>
+					<string>752860453.178889</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -36,14 +36,11 @@
 				<key>focused</key>
 				<string></string>
 				<key>leading</key>
-				<string>                ForEach(bt, id: \.id) { budgetTotal in
-                    BudgetRowView(budgetTotal: budgetTotal, selectedBudgetId: $selectedBudgetId, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetTotal: $selectedBudgetTotal)
-                </string>
-				<key>trailing</key>
-				<string>}
-            }
-            .blur(radius: showAddExpenseSheet ? 5 : 0)
+				<string>    ContentView()
+}
 </string>
+				<key>trailing</key>
+				<string></string>
 			</dict>
 			<key>type</key>
 			<string>bookmark</string>
@@ -54,15 +51,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>16</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>130</string>
+					<string>356</string>
 					<key>StartingColumnNumber</key>
-					<string>16</string>
+					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>130</string>
+					<string>356</string>
 					<key>Timestamp</key>
-					<string>752391156.10988</string>
+					<string>752860453.1788599</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -80,14 +77,11 @@
 				<key>focused</key>
 				<string></string>
 				<key>leading</key>
-				<string>                ForEach(bt, id: \.id) { budgetTotal in
-                    BudgetRowView(budgetTotal: budgetTotal, selectedBudgetId: $selectedBudgetId, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetTotal: $selectedBudgetTotal)
-                </string>
-				<key>trailing</key>
-				<string>}
-            }
-            .blur(radius: showAddExpenseSheet ? 5 : 0)
+				<string>    ContentView()
+}
 </string>
+				<key>trailing</key>
+				<string></string>
 			</dict>
 			<key>type</key>
 			<string>bookmark</string>

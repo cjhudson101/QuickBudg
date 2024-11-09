@@ -305,9 +305,9 @@ struct ExpenseListView: View {
                     List {
                         ForEach(budgetTotal.expenses, id: \.id) { expense in
                             HStack {
-                                VStack{
+                                VStack (alignment: .leading) {
                                     //show the description of the expense
-                                    Text(expense.descriptionText).font(.headline)
+                                    Text(expense.descriptionText == "" ? "N/A" : expense.descriptionText).font(.headline)
                                     //show a formatted date for the expense
                                     Text(formatDate(date: expense.dateEntered)).font(.caption)
                                 }
@@ -328,7 +328,6 @@ struct ExpenseListView: View {
             Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN") expenses")
                 .font(.title2)
                 .padding()
-            
         }
         .padding(.horizontal, 25)
         //veritcally align the groupbox to the top
