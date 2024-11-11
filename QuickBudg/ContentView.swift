@@ -166,7 +166,7 @@ struct BudgetListView: View {
               let budgetTotalToDelete = realm.object(ofType: BudgetTotal.self, forPrimaryKey: budgetTotalId)
         else { return }
         
-        print("Attempting to delete budget: \(budgetTotalId)")
+//        print("Attempting to delete budget: \(budgetTotalId)")
         do {
             try realm.write {
                 // Delete all related expenses
@@ -295,13 +295,57 @@ struct BudgetRowView: View {
 struct ExpenseListView: View {
     var budgetTotal: BudgetTotal
     @Binding var showDetailsSheet: Bool
+    @State private var budgetAmount: Double?
+    @State private var savedSuccess: Bool = false
+    
+    //initialize the budget amount to the total amount of the budget total
+    init(budgetTotal: BudgetTotal, showDetailsSheet: Binding<Bool>) {
+        self.budgetTotal = budgetTotal
+        self._showDetailsSheet = showDetailsSheet
+        self._budgetAmount = State(initialValue: budgetTotal.totalAmount)
+        self.savedSuccess = false
+    }
     
     var body: some View {
         
         GroupBox {
             VStack {
+                HStack {
+                    //TODO budgetTotal var is not binding or state so the if condition for disabled button is not updating real time
+                    TextField("Enter budget amount", value: $budgetAmount, formatter: NumberFormatter())
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .keyboardType(.numberPad)
+                    
+                    Button("Update") {
+                        savedSuccess = updateBudgetTotal()
+                        //set savedsuccess to false after 2 seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            savedSuccess = false
+                        }
+                    }
+                    .buttonStyle(BorderedProminentButtonStyle())
+                    .disabled(  budgetAmount == nil || budgetAmount == budgetTotal.totalAmount)
+                }
+                
+                if savedSuccess {
+                    //Show a small text message if the budget total was updated successfully
+                    Text("Budget total updated successfully!")
+                        .foregroundColor(.green)
+                        .font(.subheadline)
+                }
+                
+                
                 //if there are expenses in the budget total, show them
                 if budgetTotal.expenses.count > 0 {
+
+                    
+                    //create a label for the list that is close to the top of the groupbox
+                    Label("Expenses", systemImage: "list.bullet")
+                        .font(.title2)
+                        .padding(.top, 10)
+                        .padding(.bottom,-10)
+                    
+                    
                     List {
                         ForEach(budgetTotal.expenses, id: \.id) { expense in
                             HStack {
@@ -315,7 +359,7 @@ struct ExpenseListView: View {
                                 Text("\(currencyFormatted(expense.amount))")
                             }
                         }
-                    }
+                    }.padding(5)
                 } else {
                     //if there are no expenses, show a message
                     Text("No expenses found for this budget!")
@@ -325,7 +369,7 @@ struct ExpenseListView: View {
                     .padding(.top, 10)
             }
         } label: {
-            Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN") expenses")
+            Text("\(budgetTotal.budgetType?.name ?? "UNKNOWN")")
                 .font(.title2)
                 .padding()
         }
@@ -347,6 +391,28 @@ struct ExpenseListView: View {
         formatter.numberStyle = .currency
         formatter.maximumFractionDigits = 0
         return formatter.string(for: amount) ?? ""
+    }
+    
+    func updateBudgetTotal() -> Bool{
+        //Update budgetTotal.totalamount to the new value
+        guard let realm = try? Realm() else {
+            print("Error initializing Realm instance")
+            return false
+        }
+        do {
+            var existingBudgetTotal: BudgetTotal
+            if let budgetFromRealm: BudgetTotal = realm.object(ofType: BudgetTotal.self, forPrimaryKey: budgetTotal.id) {
+                existingBudgetTotal = budgetFromRealm
+                print("Found realm budget for update: \(existingBudgetTotal)")
+                try realm.write {
+                    budgetFromRealm.totalAmount = budgetAmount!
+                }
+            }
+        } catch {
+            print("Error updating budget total: \(error)")
+            return false
+        }
+        return true
     }
 }
 
