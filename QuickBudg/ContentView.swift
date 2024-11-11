@@ -328,10 +328,12 @@ struct ExpenseListView: View {
                 }
                 
                 if savedSuccess {
-                    //Show a small text message if the budget total was updated successfully
+                    //TODO make this look a little better or replace it with a snackbar
+                    
                     Text("Budget total updated successfully!")
-                        .foregroundColor(.green)
+                        .foregroundColor(.white)
                         .font(.subheadline)
+                        .background(.green)
                 }
                 
                 
