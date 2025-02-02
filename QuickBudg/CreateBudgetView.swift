@@ -25,28 +25,19 @@ struct CreateBudgetView: View {
 var body: some View {
         
         VStack {
-            Text("Select an existing budget type, or enter the name of a new type.")
-                .font(.headline)
+            Text("Create Budget")
+                .font(Font.system(size: 40))
+                .fontWeight(.bold)
                 .padding()
             
-            Picker("Select Budget Type", selection: $selectedBudgetType) {
-                Text("Select type") // Placeholder item
-                    .tag(nil as BudgetType?) // Nil tag for placeholder
-                ForEach(budgetTypes, id: \.self) { budgetType in
-                    Text(budgetType.name) // Display name of each budget type
-                        .tag(budgetType as BudgetType?)
-                }
-            }
-            .pickerStyle(MenuPickerStyle())
-            
-            TextField("Enter budget amount", value: $newBudgetAmount, formatter: NumberFormatter())
+            TextField("Budget amount", value: $newBudgetAmount, formatter: NumberFormatter())
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .keyboardType(.numberPad) // Allows for decimal input
+                .font(Font.system(size: 40, design: .default))
+                .multilineTextAlignment(.center)
             
-            Text("OR")
-            
-            TextField("Enter new type", text: $newBudgetTypeName)
+            TextField("Budget name", text: $newBudgetTypeName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .onChange(of: newBudgetTypeName) { oldValue, newValue in
@@ -56,6 +47,20 @@ var body: some View {
                         selectedBudgetType = nil
                     }
                 }
+                .font(Font.system(size: 40, design: .default))
+                .multilineTextAlignment(.center)
+            
+            Text("OR")
+            
+            Picker("Select Budget Type", selection: $selectedBudgetType) {
+                Text("Select existing type") // Placeholder item
+                    .tag(nil as BudgetType?) // Nil tag for placeholder
+                ForEach(budgetTypes, id: \.self) { budgetType in
+                    Text(budgetType.name) // Display name of each budget type
+                        .tag(budgetType as BudgetType?)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
             
             HStack {
                 Spacer()

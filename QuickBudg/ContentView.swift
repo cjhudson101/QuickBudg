@@ -29,6 +29,8 @@ struct ContentView: View {
     @State private var selectedYear: Int
     @State private var selectedMonth: Int
     @State private var showBudgetTypeSheet = false
+    @State private var showDetailsSheet = false
+    @State private var showAddExpenseSheet = false
     @State private var selectedBudgetId: String = ""
 
     @ObservedResults(BudgetTotal.self) var budgetTotals
@@ -71,45 +73,73 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        
-        VStack {
-            Label("Select Year/Month", systemImage: "calendar")
-            HStack {
-                Picker("Month",selection: $selectedMonth) {
-                    ForEach(months, id: \.0) { month in
-                        Text(month.1).tag(month.0)
+        ZStack (alignment: .bottom) {
+            VStack {
+                Label("Select Year/Month", systemImage: "calendar")
+                HStack {
+                    Button("", systemImage: "chevron.left") {
+                        previousMonth()
+                    }
+                    
+                    Picker("Month",selection: $selectedMonth) {
+                        ForEach(months, id: \.0) { month in
+                            Text(month.1).tag(month.0)
+                        }
+                    }
+                    
+                    Picker("Year",selection: $selectedYear) {
+                        ForEach(years, id: \.self) { year in
+                            Text("\(String(year))").tag(year)
+                        }
+                    }.pickerStyle(.menu)
+                    
+                    Button("", systemImage: "chevron.right") {
+                        nextMonth()
                     }
                 }
-                .padding(.leading, 10)
-                Picker("Year",selection: $selectedYear) {
-                    ForEach(years, id: \.self) { year in
-                        Text("\(String(year))").tag(year)
-                    }
-                }.pickerStyle(.menu)
+                //add padding on bottom by 5
+                .padding(.bottom, 5)
                 
-                Spacer()
-                
+                if !filteredBudgetTotals.isEmpty {
+                    BudgetListView(bt: filteredBudgetTotals, showAddExpenseSheet: $showAddExpenseSheet, showDetailsSheet: $showDetailsSheet, selectedBudgetId: $selectedBudgetId)
+                } else {
+                    Spacer()
+                    Text("No budgets found!")
+                    Text("Add a budget using the button below!")
+                    Spacer()
+                }
+            }
+            .sheet(isPresented: $showBudgetTypeSheet) {
+                CreateBudgetView(showBudgetTypeSheet: $showBudgetTypeSheet, selectedYear: selectedYear, selectedMonth: selectedMonth)
+            }
+
+            if (!self.showBudgetTypeSheet && !self.showDetailsSheet && !self.showAddExpenseSheet) {
                 Button("Add Budget", systemImage: "plus") {
                     showBudgetTypeSheet = true
                 }
-                // add padding on right side of button
-                .padding(.trailing, 10)
-                //increase the size of the button
-                .frame(width: 150, height: 50)
-            }
-            //add padding on bottom by 5
-            .padding(.bottom, 5)
-            
-            if !filteredBudgetTotals.isEmpty {
-                BudgetListView(bt: filteredBudgetTotals, selectedBudgetId: $selectedBudgetId)
-            } else {
-                Spacer()
-                Text("No budgets found!  Add a budget using the button below!")
-                Spacer()
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
             }
         }
-        .sheet(isPresented: $showBudgetTypeSheet) {
-            CreateBudgetView(showBudgetTypeSheet: $showBudgetTypeSheet, selectedYear: selectedYear, selectedMonth: selectedMonth)
+    }
+    
+    func previousMonth() {
+        if (selectedMonth == 1) {
+            selectedMonth = 12;
+            selectedYear -= 1;
+        } else {
+            selectedMonth -= 1;
+        }
+    }
+    
+    func nextMonth() {
+        if (selectedMonth == 12) {
+            selectedMonth = 1;
+            selectedYear += 1;
+        } else {
+            selectedMonth += 1;
         }
     }
     
@@ -117,8 +147,8 @@ struct ContentView: View {
 
 struct BudgetListView: View {
     var bt: Results<BudgetTotal>
-    @State var showAddExpenseSheet: Bool = false;
-    @State var showDetailsSheet: Bool = false;
+    @Binding var showAddExpenseSheet: Bool;
+    @Binding var showDetailsSheet: Bool
     @Binding var selectedBudgetId: String
     @State var selectedBudgetTotal: BudgetTotal? = nil
     
@@ -416,6 +446,7 @@ struct ExpenseListView: View {
         }
         return true
     }
+    
 }
 
 
